@@ -9,9 +9,9 @@ mongoose.connect(process.env.MONGODB_URI);
 
 const defaultValue = "";
 
-const io = new Server(3001, {
+const io = new Server(process.env.PORT_NO, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://versaile.vercel.app",
     methods: ["GET", "POST"],
   },
 });
