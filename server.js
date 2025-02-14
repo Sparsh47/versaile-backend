@@ -1,17 +1,25 @@
+import express from "express";
+import cors from "cors";
 import { Server } from "socket.io";
-import mongoose from "mongoose";
-import * as dotenv from "dotenv";
-import Document from "./models/document.model.js";
+import dotenv from "dotenv";
+import {connectToDB} from "./config/dbConfig.js";
+import {router as authRouter} from "./routes/auth.routes.js"
+import {findOrCreateDocument, saveDocument} from "./controllers/document.controller.js";
 
 dotenv.config();
 
-mongoose.connect(process.env.MONGODB_URI);
+connectToDB()
 
-const defaultValue = "";
+const app = express()
+app.use(express.json())
+app.use(cors({
+  origin: ["https://versaile.vercel.app", "http://localhost:3000"],
+  methods: ["GET", "POST"],
+}))
 
 const io = new Server(process.env.PORT_NO, {
   cors: {
-    origin: "https://versaile.vercel.app",
+    origin: ["https://versaile.vercel.app", "http://localhost:3000"],
     methods: ["GET", "POST"],
   },
 });
@@ -27,19 +35,13 @@ io.on("connection", (socket) => {
       socket.broadcast.to(id).emit("recieve-changes", delta);
     });
     socket.on("save-document", async (data) => {
-      await Document.findByIdAndUpdate(id, { data });
+      await saveDocument(id, data)
     });
   });
 });
 
-async function findOrCreateDocument(id) {
-  if (id == null) {
-    return;
-  }
-  const document = await Document.findById(id);
-  if (document) {
-    return document;
-  } else {
-    return await Document.create({ _id: id, data: defaultValue });
-  }
-}
+app.use("/api/v1/auth", authRouter)
+
+app.listen(8000, ()=>{
+  console.log("Server started on port 8000");
+})
