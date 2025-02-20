@@ -16,7 +16,11 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    document: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Document"
+    }]
 },{
     collection: "users",
 })

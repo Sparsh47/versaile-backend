@@ -15,6 +15,7 @@ app.use(express.json())
 app.use(cors({
   origin: ["https://versaile.vercel.app", "http://localhost:3000"],
   methods: ["GET", "POST"],
+  withCredentials: true
 }))
 
 const io = new Server(process.env.PORT_NO, {
