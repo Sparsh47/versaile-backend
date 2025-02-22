@@ -18,13 +18,16 @@ app.use(cookieParser())
 app.use(cors({
   origin: ["https://versaile.vercel.app", "http://localhost:3000"],
   methods: ["GET", "POST"],
-  withCredentials: true
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"]
 }))
+app.options("*", cors());
 
 const io = new Server(process.env.PORT_NO, {
   cors: {
     origin: ["https://versaile.vercel.app", "http://localhost:3000"],
     methods: ["GET", "POST"],
+    credentials: true
   },
 });
 
