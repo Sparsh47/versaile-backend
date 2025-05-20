@@ -4,8 +4,8 @@ import { Server } from "socket.io";
 import dotenv from "dotenv";
 import {connectToDB} from "./config/dbConfig.js";
 import {router as authRouter} from "./routes/auth.routes.js"
+import {router as documentsRouter} from "./routes/document.routes.js"
 import {findOrCreateDocument, saveDocument} from "./controllers/document.controller.js";
-import {verifyAuth} from "./middlewares/authMiddleware.js";
 import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -17,7 +17,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
   origin: ["https://versaile.vercel.app", "http://localhost:3000"],
-  methods: ["GET", "POST"],
+  methods: ["GET", "POST", "PATCH"],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"]
 }))
@@ -47,10 +47,11 @@ io.on("connection", (socket) => {
   });
 });
 
-app.get("/", verifyAuth, (req, res)=>{
+app.get("/", (req, res)=>{
   return res.status(200).json({message: "Test Message"})
 })
 app.use("/api/v1/auth", authRouter)
+app.use("/api/v1/documents", documentsRouter)
 
 app.listen(8000, ()=>{
   console.log("Server started on port 8000");

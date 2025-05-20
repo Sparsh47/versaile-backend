@@ -1,27 +1,38 @@
 import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema({
-    firstName: {
+    clerkId: {
         type: String,
-        required: true
+        required: true,
     },
-    lastName: {
+    username: {
         type: String,
-        required: true
+        required: true,
+    },
+    name: {
+        type: String,
+        required: true,
+    },
+    image: {
+        type: String
+    },
+    authProvider: {
+        type: String,
+        required: true,
     },
     email: {
         type: String,
         required: true,
         unique: true
     },
-    password: {
-        type: String,
-        required: true
-    },
     document: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Document"
-    }]
+        type: String,
+        ref: "Document",
+    }],
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 },{
     collection: "users",
     timestamps: true,
