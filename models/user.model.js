@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
         unique: true
     },
     document: [{
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Document",
     }],
     createdAt: {

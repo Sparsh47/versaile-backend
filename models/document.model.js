@@ -1,13 +1,34 @@
-import mongoose, {model, Schema} from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 
 const documentSchema = new Schema({
-    _id: String, data: Object, userId: {
-        type: mongoose.Schema.Types.ObjectId, ref: "User", default: null
-    }
+    data: Object,
+    userId: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: null,
+    }],
+    documentTitle: {
+        type: String,
+    },
 }, {
     collection: "documents",
 });
 
-const Document = model("Document", documentSchema);
+documentSchema.pre("save", async function (next) {
+    if (this.documentTitle) return next();
 
+    if (this.userId && this.userId.length > 0) {
+        const count = await mongoose.models.Document.countDocuments({
+            userId: { $in: this.userId },
+        });
+
+        this.documentTitle = `Untitled-${count + 1}`;
+    } else {
+        this.documentTitle = "Untitled";
+    }
+
+    next();
+});
+
+const Document = model("Document", documentSchema);
 export default Document;
