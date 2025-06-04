@@ -19,7 +19,7 @@ const httpServer = http.createServer(app);
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-    origin: ["https://versaile.vercel.app"],
+    origin: ["https://versaile.vercel.app/", "http://localhost:3000"],
     methods: ["GET", "POST", "PATCH"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"]
@@ -28,7 +28,7 @@ app.options("*", cors());
 
 const io = new Server(httpServer, {
     cors: {
-        origin: ["https://versaile.vercel.app"],
+        origin: ["https://versaile.vercel.app/", "http://localhost:3000"],
         methods: ["GET", "POST"],
         credentials: true
     }
