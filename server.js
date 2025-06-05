@@ -63,8 +63,8 @@ io.on("connection", (socket) => {
 
 
 // ─── ROUTES ─────────────────────────────────────────────────────────────────────────
-app.get("/", (req, res) => {
-    return res.status(200).json({ message: "Test Message" });
+app.get("/health", (req, res) => {
+    return res.status(200).json({ message: "Health Route", ready: true });
 });
 
 app.use("/api/v1/auth", authRouter);
